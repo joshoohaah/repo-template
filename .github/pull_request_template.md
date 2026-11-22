@@ -15,6 +15,6 @@ Closes #
 
 ## Housekeeping
 - [ ] `PROGRESS.md` updated (done / next / traps)
-- [ ] `AGENTS.md` updated if commands, structure, or gotchas changed
+- [ ] `CLAUDE.md` updated if commands, structure, or gotchas changed
 - [ ] Decision recorded in `docs/decisions/` if one was made
 - [ ] No secrets, `.env`, or debug output committed

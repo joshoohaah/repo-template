@@ -11,12 +11,12 @@ Template for each entry:
 - **Done:** what changed (files / PRs)
 - **Verified:** what `scripts/verify.sh` / manual checks showed
 - **Next:** the very next concrete step
-- **Traps:** anything surprising that cost time (also add to AGENTS.md › Gotchas if durable)
+- **Traps:** anything surprising that cost time (also add to CLAUDE.md › Gotchas if durable)
 -->
 
 ## {{DATE}} — Repository created from template
 - **Goal:** bootstrap repo.
 - **Done:** ran `scripts/init-template.sh`.
 - **Verified:** `bash scripts/verify.sh` passes (no stack detected yet).
-- **Next:** fill in the `{{...}}` placeholders in `AGENTS.md`; add the first spec.
+- **Next:** fill in the `{{...}}` placeholders in `CLAUDE.md`; add the first spec.
 - **Traps:** none yet.

@@ -1,8 +1,11 @@
-# repo-template
+# repo-template (Claude Code)
 
-A GitHub template repository that makes any new repo **agent-ready on day one**
-(Claude Code, Codex, Copilot, Cursor, ...). Language-agnostic: works for Node,
-Python, Go, Rust, or anything you plug into `scripts/verify.sh`.
+A GitHub template repository that makes any new repo **ready for Claude Code on
+day one**. Language-agnostic: works for Node, Python, Go, Rust, or anything you
+plug into `scripts/verify.sh`.
+
+Using GitHub Copilot instead? Use
+[copilot-repo-template](https://github.com/joshoohaah/copilot-repo-template).
 
 > This README is replaced by a project README when you run `scripts/init-template.sh`.
 
@@ -10,42 +13,19 @@ Python, Go, Rust, or anything you plug into `scripts/verify.sh`.
 
 | Path | Purpose | Idea from |
 |------|---------|-----------|
-| `AGENTS.md` | One place for agent instructions: commands, repo map, boundaries, gotchas | [AGENTS.md](https://github.com/agentsmd/agents.md) |
-| `CLAUDE.md` | Imports `AGENTS.md` (`@AGENTS.md`) so Claude Code reads the same file | — |
+| `CLAUDE.md` | Project instructions loaded every session: commands, repo map, boundaries, gotchas | [AGENTS.md](https://github.com/agentsmd/agents.md) |
 | `scripts/verify.sh` | Single non-interactive "is it working?" command; auto-detects stack; prints only failures | [mini-SWE-agent](https://github.com/SWE-agent/mini-swe-agent), [12-factor](https://github.com/humanlayer/12-factor-agents) #9 |
 | `PROGRESS.md` | Append-only handoff log so sessions resume cold | [harness engineering](https://github.com/walkinglabs/learn-harness-engineering) (continuity) |
-| `docs/specs/` | Spec-before-code template with testable acceptance criteria | [Spec Kit](https://github.com/github/spec-kit) (lite) |
-| `docs/decisions/` | ADRs — durable "why" | — |
+| `.claude/settings.json` | Permissions (allow verify + git-read; deny `.env`/keys, `rm -rf`, force-push) and a **SessionStart hook** that shows Claude the latest `PROGRESS.md` entry and git state | harness engineering (continuity) |
+| `.claude/skills/` | `/spec`, `/verify`, `/review`, `/handoff` | Spec Kit, harness engineering |
+| `.claude/agents/reviewer.md` | Read-only **reviewer subagent**: checks a diff against its spec in a fresh context | harness engineering (independent review) |
+| `.github/workflows/claude.yml` | `@claude` in an issue or PR → Claude Code works on it in GitHub Actions | 12-factor #11 (trigger from anywhere) |
+| `.github/workflows/ci.yml` | Runs the same `verify.sh` | — |
+| `docs/specs/`, `docs/decisions/` | Spec-before-code template; ADRs | [Spec Kit](https://github.com/github/spec-kit) (lite) |
 | `docs/agents/PRINCIPLES.md` | The principles above, applied to this repo | all |
-| `.claude/skills/` | `spec`, `verify`, `review` (fresh-context reviewer), `handoff` — Agent Skills read by **both** Claude Code and Copilot | harness engineering (independent review) |
-| `.claude/settings.json` / `.vscode/settings.json` | Same guardrails for both: auto-approve verify + git-read; block `rm`, force-push (Claude also blocks reading `.env`/keys) | — |
-| `.github/copilot-instructions.md` | Generated copy of `AGENTS.md` for Copilot code review; `verify.sh` fails if it drifts | — |
-| `.github/` | CI that runs the same `verify.sh`; `copilot-setup-steps.yml` for the Copilot cloud agent; PR template with verification checklist; `agent-task` issue form; Dependabot | 12-factor #11 |
-
-## Claude Code ↔ GitHub Copilot
-
-One source of truth per concern; each tool reads it natively or gets a generated copy.
-
-| Concern | Source of truth | Claude Code | Copilot |
-|---------|-----------------|-------------|---------|
-| Instructions | `AGENTS.md` | `CLAUDE.md` → `@AGENTS.md` | reads `AGENTS.md`; code review reads generated `.github/copilot-instructions.md` |
-| Skills / slash commands | `.claude/skills/*/SKILL.md` | native | native (Copilot reads `.claude/skills`) |
-| Terminal guardrails | — (two small files) | `.claude/settings.json` | `.vscode/settings.json` |
-| Cloud agent environment | `.github/workflows/ci.yml` toolchain | — | `copilot-setup-steps.yml` (mirror CI) |
-| MCP servers (if you add any) | — | `.mcp.json` | `.vscode/mcp.json` |
-
-After editing `AGENTS.md`, run `bash scripts/sync-agent-config.sh`.
+| `.github/` (rest) | PR template with verification checklist, `agent-task` issue form, Dependabot | — |
 
 ## Use it
-
-**One-time:** push this repo to GitHub and mark it as a template:
-
-```bash
-gh repo create <you>/repo-template --private --source . --push
-gh repo edit <you>/repo-template --template
-```
-
-**Every new project:**
 
 ```bash
 gh repo create <you>/my-app --private --template <you>/repo-template --clone
@@ -53,17 +33,20 @@ cd my-app
 bash scripts/init-template.sh "my-app" "One-line description of what it does"
 ```
 
-Then ask your agent: *"Fill in the `{{...}}` placeholders in AGENTS.md from the
-code and uncomment the right toolchain in `.github/workflows/ci.yml`."*
+Then in Claude Code: *"Fill in the `{{...}}` placeholders in CLAUDE.md from the
+code, and add the right toolchain to ci.yml and claude.yml."*
 
-**Existing repo?** Copy `AGENTS.md`, `CLAUDE.md`, `PROGRESS.md`, `scripts/`,
-`docs/`, `.claude/`, `.vscode/settings.json`, and the `.github/` pieces you want,
-then run `bash scripts/sync-agent-config.sh`.
+**To enable `@claude` on GitHub** (optional, once per repo or org):
+run `/install-github-app` in Claude Code, or add a `CLAUDE_CODE_OAUTH_TOKEN`
+secret (from `claude setup-token`). Without it, `claude.yml` does nothing.
+
+**Existing repo?** Copy `CLAUDE.md`, `PROGRESS.md`, `scripts/`, `docs/`,
+`.claude/`, and the `.github/` pieces you want.
 
 ## Daily loop
 
 ```
-read PROGRESS.md → /spec → implement in small steps → /verify → /review → /handoff → PR
+(SessionStart hook shows PROGRESS.md) → /spec → small steps + /verify → /review → /handoff → PR
 ```
 
 Details: [docs/agents/WORKFLOW.md](docs/agents/WORKFLOW.md).
@@ -83,7 +66,6 @@ On Windows without a bash prompt: `pwsh scripts/verify.ps1`.
 
 ## Not included (on purpose)
 
-- **Deep Agents / mini-SWE-agent code** — this template shapes *repos* for
-  agents; it doesn't ship an agent.
+- **MCP servers** — add a `.mcp.json` per project when one is needed.
 - **Agent evals ([Harbor](https://github.com/harbor-framework/harbor))** — add
   when a repo *is* an agent or you're tuning prompts/config and need evidence.

@@ -5,7 +5,7 @@ theory; each principle maps to something concrete in the template.
 
 | Source | What we took |
 |--------|--------------|
-| [AGENTS.md](https://github.com/agentsmd/agents.md) | One predictable file for agent instructions (`AGENTS.md`), imported by `CLAUDE.md` |
+| [AGENTS.md](https://github.com/agentsmd/agents.md) | One predictable, short instructions file — here that is `CLAUDE.md`, which Claude Code loads every session |
 | [12-Factor Agents](https://github.com/humanlayer/12-factor-agents) | Own the context, compact errors, small focused tasks, humans in the loop, stateless steps |
 | [mini-SWE-agent](https://github.com/SWE-agent/mini-swe-agent) | Everything is a plain shell command; linear history; no hidden state |
 | [Learn Harness Engineering](https://github.com/walkinglabs/learn-harness-engineering) | Agent-readable workspace, cross-session continuity, runtime feedback, independent review, loops |
@@ -17,13 +17,13 @@ theory; each principle maps to something concrete in the template.
 
 An agent only knows what it can read or run. So:
 
-- **`AGENTS.md` is a map, not a manual.** ~100 lines: commands, repo map,
+- **`CLAUDE.md` is a map, not a manual.** ~100 lines: commands, repo map,
   boundaries, gotchas. Deep detail lives in `docs/` and is pulled on demand.
   *(12-factor #3 "own your context window": don't flood it up front.)*
 - **Durable knowledge goes in files, not chat.** Decisions → `docs/decisions/`,
   feature intent → `docs/specs/`, session state → `PROGRESS.md`. A fact that
   only exists in a chat transcript is lost.
-- **Instructions must be true.** A stale command in `AGENTS.md` is worse than
+- **Instructions must be true.** A stale command in `CLAUDE.md` is worse than
   none. Fix it in the PR that notices.
 
 ## 2. Everything is a shell command (mini-SWE-agent)
@@ -99,7 +99,7 @@ The author grades its own work generously. So:
 ## 9. Close the loop
 
 - Every PR template asks: what was verified, how.
-- When an agent hits a trap, add it to `AGENTS.md › Gotchas`.
+- When an agent hits a trap, add it to `CLAUDE.md › Gotchas`.
 - When a decision is made, record it in `docs/decisions/`.
 - Measure before claiming "the new prompt/config is better" — see
   [Harbor](https://github.com/harbor-framework/harbor) if a repo grows an

@@ -1,7 +1,7 @@
 # Workflow: spec → implement → verify → review → handoff
 
 ```
- ┌──────── read PROGRESS.md + AGENTS.md ─────────┐
+ ┌──────── read PROGRESS.md + CLAUDE.md ─────────┐
  │                                               │
  ▼                                               │
 SPEC ──► IMPLEMENT ◄──► VERIFY ──► REVIEW ──► HANDOFF
@@ -30,18 +30,18 @@ SPEC ──► IMPLEMENT ◄──► VERIFY ──► REVIEW ──► HANDOFF
 - Don't weaken tests or lint rules to get green.
 
 ## 4. Review
-- `/review` (Claude Code or Copilot) — a fresh-context reviewer checks the
-  diff against the spec without seeing your conversation.
+- `/review` — the `reviewer` subagent checks the
+  diff against the spec in a fresh context, without seeing your conversation.
 - Address correctness/security findings; note the rest in the PR.
 
 ## 5. Handoff
 - `/handoff` — appends a `PROGRESS.md` entry: done / verified / next / traps.
 - Open a PR using the template; link the spec.
-- Durable lessons → `AGENTS.md › Gotchas` or `docs/decisions/`.
+- Durable lessons → `CLAUDE.md › Gotchas` or `docs/decisions/`.
 
 ## Running agents in a loop (optional)
 
 Once the above is solid, the same pieces support unattended loops:
-issue (labelled `agent-task`) → agent reads spec → implements → CI runs
+issue (labelled `agent-task`) → comment `@claude` (`.github/workflows/claude.yml`) → Claude reads spec → implements → CI runs
 `verify.sh` → PR → human review. The guardrails are the ones already here:
 small specs, one verify command, PR review, and `PROGRESS.md` for state.
