@@ -57,6 +57,9 @@ check_shell_syntax() {
 if git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
   run_step "no conflict markers" check_conflict_markers
   run_step "shell script syntax" check_shell_syntax
+  if [[ -f scripts/sync-agent-config.sh ]]; then
+    run_step "agent config in sync" bash scripts/sync-agent-config.sh --check
+  fi
   if have gitleaks; then
     run_step "secret scan (gitleaks)" gitleaks detect --no-banner --redact --source .
   fi

@@ -1,0 +1,13 @@
+{
+  // GitHub Copilot (VS Code) — mirrors .claude/settings.json so both agents
+  // get the same instructions and the same terminal guardrails.
+  "chat.useAgentsMdFile": true,
+  "chat.tools.terminal.enableAutoApprove": true,
+  "chat.tools.terminal.autoApprove": {
+    "/^bash scripts/verify\\.sh\\b/": true,
+    "/^pwsh scripts/verify\\.ps1\\b/": true,
+    "/^git\\s+(status|diff|log|show)\\b/": true,
+    "rm": false,
+    "/^git\\s+push\\b.*(--force|-f\\b)/": false
+  }
+}

@@ -30,8 +30,8 @@ SPEC ──► IMPLEMENT ◄──► VERIFY ──► REVIEW ──► HANDOFF
 - Don't weaken tests or lint rules to get green.
 
 ## 4. Review
-- `/review` (Claude Code) — a subagent reviews the diff against the spec
-  without seeing your conversation.
+- `/review` (Claude Code or Copilot) — a fresh-context reviewer checks the
+  diff against the spec without seeing your conversation.
 - Address correctness/security findings; note the rest in the PR.
 
 ## 5. Handoff

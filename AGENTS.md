@@ -3,6 +3,8 @@
 > The README for coding agents (Claude Code, Codex, Copilot, Cursor, Aider, ...).
 > Keep this file short and true. If an instruction here is wrong, fix it in the
 > same PR that discovers it. Details live in `docs/`, not here.
+> After editing, run `bash scripts/sync-agent-config.sh` (regenerates
+> `.github/copilot-instructions.md`; `verify.sh` fails if you forget).
 
 ## Project
 
@@ -72,6 +74,11 @@ PROGRESS.md     running handoff log between sessions
 
 <!-- Add things that bit an agent (or a human) so it doesn't happen twice. -->
 - {{e.g. "Tests need `TZ=UTC` or date tests fail."}}
+
+## Skills
+
+Reusable workflows in `.claude/skills/` (read by both Claude Code and Copilot):
+`spec`, `verify`, `review`, `handoff`. Use them when the task matches.
 
 ## More context (read on demand, not up front)
 

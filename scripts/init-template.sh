@@ -61,12 +61,14 @@ bash scripts/verify.sh
 - Principles: [docs/agents/PRINCIPLES.md](docs/agents/PRINCIPLES.md).
 EOF
 
+bash scripts/sync-agent-config.sh
+
 rm -f "$0"
 
 echo "Initialized '$NAME'."
 echo
 echo "Placeholders still to fill in:"
-grep -rn --include='*.md' --include='CODEOWNERS' '{{' . | grep -v '^./docs/specs/TEMPLATE.md' || echo "  (none)"
+grep -rn --include='*.md' --include='CODEOWNERS' '{{' . | grep -vE '^\./(docs/specs/TEMPLATE\.md|\.github/copilot-instructions\.md)' || echo "  (none)"
 echo
 echo "Next: fill those in (or ask your agent: 'fill in the AGENTS.md placeholders from the code'),"
 echo "then run: bash scripts/verify.sh"

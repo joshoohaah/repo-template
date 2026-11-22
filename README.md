@@ -17,9 +17,24 @@ Python, Go, Rust, or anything you plug into `scripts/verify.sh`.
 | `docs/specs/` | Spec-before-code template with testable acceptance criteria | [Spec Kit](https://github.com/github/spec-kit) (lite) |
 | `docs/decisions/` | ADRs — durable "why" | — |
 | `docs/agents/PRINCIPLES.md` | The principles above, applied to this repo | all |
-| `.claude/commands/` | `/spec`, `/verify`, `/review` (fresh-context subagent), `/handoff` | harness engineering (independent review) |
-| `.claude/settings.json` | Allow verify/git-read; deny `.env`/keys, `rm -rf`, force-push | — |
-| `.github/` | CI that runs the same `verify.sh`; PR template with verification checklist; `agent-task` issue form; Dependabot | 12-factor #11 |
+| `.claude/skills/` | `spec`, `verify`, `review` (fresh-context reviewer), `handoff` — Agent Skills read by **both** Claude Code and Copilot | harness engineering (independent review) |
+| `.claude/settings.json` / `.vscode/settings.json` | Same guardrails for both: auto-approve verify + git-read; block `rm`, force-push (Claude also blocks reading `.env`/keys) | — |
+| `.github/copilot-instructions.md` | Generated copy of `AGENTS.md` for Copilot code review; `verify.sh` fails if it drifts | — |
+| `.github/` | CI that runs the same `verify.sh`; `copilot-setup-steps.yml` for the Copilot cloud agent; PR template with verification checklist; `agent-task` issue form; Dependabot | 12-factor #11 |
+
+## Claude Code ↔ GitHub Copilot
+
+One source of truth per concern; each tool reads it natively or gets a generated copy.
+
+| Concern | Source of truth | Claude Code | Copilot |
+|---------|-----------------|-------------|---------|
+| Instructions | `AGENTS.md` | `CLAUDE.md` → `@AGENTS.md` | reads `AGENTS.md`; code review reads generated `.github/copilot-instructions.md` |
+| Skills / slash commands | `.claude/skills/*/SKILL.md` | native | native (Copilot reads `.claude/skills`) |
+| Terminal guardrails | — (two small files) | `.claude/settings.json` | `.vscode/settings.json` |
+| Cloud agent environment | `.github/workflows/ci.yml` toolchain | — | `copilot-setup-steps.yml` (mirror CI) |
+| MCP servers (if you add any) | — | `.mcp.json` | `.vscode/mcp.json` |
+
+After editing `AGENTS.md`, run `bash scripts/sync-agent-config.sh`.
 
 ## Use it
 
@@ -42,7 +57,8 @@ Then ask your agent: *"Fill in the `{{...}}` placeholders in AGENTS.md from the
 code and uncomment the right toolchain in `.github/workflows/ci.yml`."*
 
 **Existing repo?** Copy `AGENTS.md`, `CLAUDE.md`, `PROGRESS.md`, `scripts/`,
-`docs/`, `.claude/commands/`, and the `.github/` pieces you want.
+`docs/`, `.claude/`, `.vscode/settings.json`, and the `.github/` pieces you want,
+then run `bash scripts/sync-agent-config.sh`.
 
 ## Daily loop
 
