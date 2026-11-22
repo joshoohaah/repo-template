@@ -17,7 +17,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       # Uncomment the toolchain(s) this repo uses, plus the install step.
       # - uses: actions/setup-node@v4
