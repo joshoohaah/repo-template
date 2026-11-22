@@ -1,0 +1,23 @@
+name: Bug report
+description: Something is broken.
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened vs. what you expected
+    validations:
+      required: true
+  - type: textarea
+    id: repro
+    attributes:
+      label: Steps to reproduce
+      description: Exact commands / inputs. Ideally something that can become a failing test.
+    validations:
+      required: true
+  - type: textarea
+    id: env
+    attributes:
+      label: Environment & logs
+      description: Version/commit, OS, relevant log lines (trimmed).
+      render: text

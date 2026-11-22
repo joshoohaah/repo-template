@@ -1,0 +1,35 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      # Uncomment the toolchain(s) this repo uses, plus the install step.
+      # - uses: actions/setup-node@v4
+      #   with: { node-version-file: .nvmrc, cache: npm }
+      # - run: npm ci
+
+      # - uses: astral-sh/setup-uv@v6
+      # - run: uv sync --frozen
+
+      # - uses: actions/setup-go@v5
+      #   with: { go-version-file: go.mod }
+
+      # Same command agents and humans run locally — one definition of "done".
+      - name: Verify
+        run: bash scripts/verify.sh

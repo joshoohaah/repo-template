@@ -1,0 +1,40 @@
+name: Agent task
+description: A small, well-specified task an agent can pick up and finish in one PR.
+labels: [agent-task]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Keep it small (one PR). If you can't write testable acceptance criteria,
+        write a spec in `docs/specs/` first and link it here.
+  - type: textarea
+    id: goal
+    attributes:
+      label: Goal
+      description: What should be true when this is done, and why it matters.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Testable statements. Each should become a test.
+      placeholder: |
+        - [ ] Given ..., when ..., then ...
+    validations:
+      required: true
+  - type: textarea
+    id: context
+    attributes:
+      label: Context & pointers
+      description: Relevant files, spec link, prior PRs, constraints.
+  - type: textarea
+    id: nongoals
+    attributes:
+      label: Out of scope
+      description: What the agent must NOT change.
+  - type: textarea
+    id: ask
+    attributes:
+      label: Stop and ask a human if...
+      placeholder: e.g. a schema migration is needed; a new dependency is required
